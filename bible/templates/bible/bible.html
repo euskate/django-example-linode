@@ -1,0 +1,5 @@
+{% extends 'base.html' %} {% load static %} {% block contents %}
+<h1>bible</h1>
+{% for item in bible %}
+<p>{{ item.book }} {{ item.chapter }}:{{ item.verse}} {{ item.contents }}</p>
+{% endfor %} {% endblock contents %}

@@ -1,18 +1,28 @@
 from django.db import models
 
 # Create your models here.
+
+
 class BibleModel(models.Model):
     book = models.CharField(max_length=3)
     chapter = models.PositiveSmallIntegerField()
     verse = models.PositiveSmallIntegerField()
     contents = models.TextField()
 
-class Abbreviation(models.Model):
+    def __str__(self):
+        return f"{self.book} {self.chapter}:{self.verse} {self.contents}"
+
+
+class BibleMetaModel(models.Model):
     book = models.CharField(max_length=3)
     full_name = models.CharField(max_length=15)
+    testament = models.CharField(max_length=3)
+    chapter_length = models.PositiveSmallIntegerField()
+    verse_length = models.PositiveSmallIntegerField()
 
     def __str__(self):
-        return f"{self.book}"
+        return f"{self.full_name}"
+
 
 class McheyneModel(models.Model):
     month = models.PositiveSmallIntegerField()

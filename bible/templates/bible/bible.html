@@ -1,5 +1,41 @@
-{% extends 'base.html' %} {% load static %} {% block contents %}
-<h1>bible</h1>
-{% for item in bible %}
-<p>{{ item.book }} {{ item.chapter }}:{{ item.verse}} {{ item.contents }}</p>
-{% endfor %} {% endblock contents %}
+<!-- prettier-ignore -->
+{% extends 'base.html' %} {% load static %}
+{% block sub_title %} 성경 {% endblock sub_title %}
+<!-- prettier-ignore -->
+
+{% block contents %}
+
+<h1>성경</h1>
+
+<div class="container-fluid mt-3">
+  {% for obj in meta %}
+  <div
+    class="btn btn-outline-primary btn-sm p-1 my-1 shadow"
+    data-bs-toggle="tooltip"
+    title="{{ obj.chapter_length }}장"
+  >
+    {{ obj.full_name }}
+    <span class="badge rounded-pill bg-info">{{ obj.chapter_length }}</span>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="container">
+  <ul class="breadcrumb">
+    {% for obj in meta %}
+    <li class="breadcrumb-item"><a href="#">{{obj.full_name}}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="container">
+  <div class="list-group list-group-horizontal">
+    {% for obj in meta %}
+    <a href="#" class="list-group-item list-group-item-action"
+      >{{obj.full_name}}</a
+    >
+    {% endfor %}
+  </div>
+</div>
+{% endblock contents %}
+<!-- Horizontal under breakpoint -->

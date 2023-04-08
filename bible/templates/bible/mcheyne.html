@@ -1,5 +1,60 @@
 {% extends 'base.html' %} {% load static %} {% block contents %}
 <h1>mcheyne</h1>
+<div id="date">날짜</div>
+<div>오늘의 맥체인</div>
+<div class="" id="today_mc"></div>
+<div id="mc_contents"></div>
+
+<script>
+  let mcData = {{ mcheyne_data | safe }}
+  let bibleData = {{ bible_data | safe }}
+  let today = new Date()
+  let year = today.getFullYear();
+  let month = today.getMonth() + 1
+  let day = today.getDate()
+  let el_mc_contents = document.getElementById("mc_contents")
+  let mcToday = getMcData(month, day)
+
+  document.getElementById("date").innerHTML = `${year}년 ${month}월 ${day}일`
+
+  document.getElementById("today_mc").innerHTML = `${mcToday.part1} / ${mcToday.part2} / ${mcToday.part3} / ${mcToday.part4}`
+
+  el_mc_contents.innerHTML = "test"
+
+  function getMcData(month, day) {
+    for (const obj of mcData) {
+      if (obj.fields.month == month && obj.fields.day == day) {
+        console.log(month, day);
+        return obj.fields
+      }
+    }
+  }
+
+  test(1)
+  test(2)
+  test(3)
+  test(4)
+
+  function test(part_num) {
+    el_mc_contents
+    let part = 'part' + part_num
+    let start_index = bibleData.findIndex(obj => ((obj.fields.book === mcToday[part + '_start_book']) && (obj.fields.chapter === mcToday[part + '_start_chapter']) && (obj.fields.verse === mcToday[part + '_start_verse'])))
+    let end_index = bibleData.findIndex(obj => ((obj.fields.book === mcToday[part + '_end_book']) && (obj.fields.chapter === mcToday[part + '_end_chapter']) && (obj.fields.verse === mcToday[part + '_end_verse'])))
+
+    for (let i = start_index; i < end_index + 1; i++) {
+      p = document.createElement('p')
+      text = `${bibleData[i].fields.verse} ${bibleData[i].fields.contents}`
+      textNode = document.createTextNode(text)
+      p.appendChild(textNode)
+      el_mc_contents.appendChild(p)
+      console.log(`${bibleData[i].fields.verse} ${bibleData[i].fields.contents}`)
+
+    }
+  }
+</script>
+
 {% for item in mcheyne %}
 <p>{{ item }}</p>
-{% endfor %} {% endblock contents %}
+{% endfor %}
+
+{% endblock contents %}

@@ -39,18 +39,18 @@
   }
 </style>
 <h1>성경</h1>
-
 <div class="container-fluid mt-3">
   {% for obj in meta %}
   <div class="btn btn-outline-primary btn-sm p-1 my-1 shadow" data-bs-toggle="tooltip" title="{{ obj.chapter_length }}장"
-    onclick="displayText('{{obj.book}}'); displayChapter('{{obj.book}}', {{obj.chapter_length}})">
+    onclick="displayData('{{obj.book}}'); displayChapter('{{obj.book}}', {{obj.chapter_length}})">
+
+
     {{ obj.full_name }}
     <span class="badge rounded-pill bg-info">{{ obj.chapter_length }}</span>
   </div>
   {% endfor %}
 </div>
 <div class="container-fluid mt3">
-  chapter
   <div id="chapter_space"></div>
 </div>
 <div class="container-fluid mt3">
@@ -58,13 +58,48 @@
   </div>
 </div>
 
+<div id="testSpace"></div>
 
 
+<template id="testTemplate">
+  <div class="chapter">1</div>
+  <div class="box">
+    <div class="verse_number">2</div>
+    <p>테스트</p>
+  </div>
+</template>
+
+<!-- onclick="displayText('{{obj.book}}'); displayChapter('{{obj.book}}', {{obj.chapter_length}})"> -->
 <script type="text/javascript">
-  let metaData = {{ meta_data | safe }}
-  let bibleData = {{ bible_data | safe }}
+
+  // let metaData = {{ meta_data | safe }}
+  // let bibleData = {{ bible_data | safe }}
   let elText = document.getElementById("text_space")
   let elChapter = document.getElementById("chapter_space")
+
+  async function displayData(book, chapter = 0) { // 비동기 데이터 소환
+    // 데이터 추가할 DOM 요소 설정
+    const testSpace = document.querySelector('#testSpace');
+    // 데이터 가져오기
+    let data = await getData(book, chapter)
+    testSpace.innerHTML = ""  // 초기화
+    for (const obj of data) {
+      generateVerse(obj, testSpace) // 구절 데이터 생성
+    }
+  }
+
+  function getData(book, chapter = 0) {
+    let url = `/bible/bible/` + encodeURIComponent(book) + '/' + chapter;
+    return fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        return data;
+      })
+      .catch(error => console.error(error));
+  }
+
+
+
 
   function displayText(book, chapter = 0) {
     elText.innerHTML = ""
@@ -118,13 +153,40 @@
       span.append(`${index}`)
       elChapter.appendChild(span)
       span.addEventListener('click', () => {
-        console.log('Button clicked!');
-        displayText(book, index)
+        displayData(book, index)
       });
     }
   }
 
-  function generateVerse(data, index) {
+  // function generateVerse(data, index) {
+  //   // 박스 생성
+  //   const box = document.createElement('div');
+  //   box.classList.add('box');
+
+  //   // 절 번호 추가
+  //   const verseNumber = document.createElement('div');
+  //   verseNumber.classList.add('verse_number');
+  //   verseNumber.textContent = data.fields.verse
+
+  //   // 절 내용 추가
+  //   const verse = document.createElement('p');
+  //   verse.textContent = data.fields.contents
+
+  //   // 박스에 자식 요소들을 추가
+  //   box.appendChild(verseNumber);
+  //   box.appendChild(verse);
+
+  //   elText.appendChild(box) // HTML 요소에 추가
+  // }
+
+  function generateVerse(obj, space) {
+    // 1절인 경우 장 생성
+    if (obj.verse === 1) {
+      const div = document.createElement('div');
+      div.classList.add('chapter');
+      div.textContent = obj.chapter
+      space.append(div)
+    }
     // 박스 생성
     const box = document.createElement('div');
     box.classList.add('box');
@@ -132,17 +194,17 @@
     // 절 번호 추가
     const verseNumber = document.createElement('div');
     verseNumber.classList.add('verse_number');
-    verseNumber.textContent = data.fields.verse
+    verseNumber.textContent = obj.verse
 
     // 절 내용 추가
     const verse = document.createElement('p');
-    verse.textContent = data.fields.contents
+    verse.textContent = obj.contents
 
     // 박스에 자식 요소들을 추가
     box.appendChild(verseNumber);
     box.appendChild(verse);
 
-    elText.appendChild(box) // HTML 요소에 추가
+    space.appendChild(box) // HTML 요소에 추가
   }
 </script>
 {% endblock contents %}

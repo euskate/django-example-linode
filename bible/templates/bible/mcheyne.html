@@ -31,6 +31,7 @@
     margin-block-start: 0px;
     margin-block-end: 0rem;
   }
+
   .partname {
     text-align: center;
     font-size: large;
@@ -96,29 +97,29 @@
 <script>
   // let mcData = {{ mcheyne_data | safe }}
   // let bibleData = {{ bible_data | safe }}
-  let today = new Date();
-  let year = today.getFullYear();
-  let month = today.getMonth() + 1;
-  let day = today.getDate();
-  let el_mc_contents = document.getElementById("mc_contents");
-  let mcToday = getMcData(month, day);
+  // let today = new Date();
+  // let year = today.getFullYear();
+  // let month = today.getMonth() + 1;
+  // let day = today.getDate();
+  // let el_mc_contents = document.getElementById("mc_contents");
+  // let mcToday = getMcData(month, day);
 
-  document.getElementById("date").innerHTML = `${year}년 ${month}월 ${day}일`;
+  // document.getElementById("date").innerHTML = `${year}년 ${month}월 ${day}일`;
 
-  document.getElementById(
-    "today_mc"
-  ).innerHTML = `${mcToday.part1} / ${mcToday.part2} / ${mcToday.part3} / ${mcToday.part4}`;
+  // document.getElementById(
+  //   "today_mc"
+  // ).innerHTML = `${mcToday.part1} / ${mcToday.part2} / ${mcToday.part3} / ${mcToday.part4}`;
 
-  el_mc_contents.innerHTML = "test";
+  // el_mc_contents.innerHTML = "test";
 
-  function getMcData(month, day) {
-    for (const obj of mcData) {
-      if (obj.fields.month == month && obj.fields.day == day) {
-        console.log(month, day);
-        return obj.fields;
-      }
-    }
-  }
+  // function getMcData(month, day) {
+  //   for (const obj of mcData) {
+  //     if (obj.fields.month == month && obj.fields.day == day) {
+  //       console.log(month, day);
+  //       return obj.fields;
+  //     }
+  //   }
+  // }
 
   test(1);
   test(2);

@@ -1,50 +1,35 @@
 <!-- prettier-ignore -->
 {% extends 'base.html' %} {% load static %}
-{% block sub_title %} 성경 {% endblock sub_title %}
 <!-- prettier-ignore -->
+{% block head %}
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+  crossorigin="anonymous"
+/>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+  crossorigin="anonymous"
+></script>
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'bible/css/style.css' %}"
+/>
 
-{% block contents %}
+{% endblock head %} {% block contents %} {% load static %}
 
-<style>
-  .upside {
-    text-align: center;
-  }
-
-  .chapter {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: bold;
-    padding-right: 0.5rem;
-    font-size: xx-large;
-    float: left;
-  }
-
-  .box {
-    display: flex;
-    margin-block-end: 0.3rem;
-  }
-
-  .verse_number {
-    flex: 0 0 18px;
-    padding-top: 0.5rem;
-    font-family: "Courier New", Courier, monospace;
-    font-size: 10px;
-    text-align: center;
-  }
-
-  p {
-    font-family: Georgia, "Times New Roman", Times, serif;
-    flex: 1;
-    margin-block-start: 0px;
-    margin-block-end: 0rem;
-  }
-</style>
 <h1>성경</h1>
 <div class="container-fluid mt-3">
   {% for obj in meta %}
-  <div class="btn btn-outline-primary btn-sm p-1 my-1 shadow" data-bs-toggle="tooltip" title="{{ obj.chapter_length }}장"
-    onclick="displayData('{{obj.book}}'); displayChapter('{{obj.book}}', {{obj.chapter_length}})">
-
-
+  <div
+    class="btn btn-outline-primary btn-sm p-1 my-1 shadow"
+    data-bs-toggle="tooltip"
+    title="{{ obj.chapter_length }}장"
+    onclick="displayData('{{obj.book}}'); displayChapter('{{obj.book}}', {{obj.chapter_length}})"
+  >
     {{ obj.full_name }}
     <span class="badge rounded-pill bg-info">{{ obj.chapter_length }}</span>
   </div>
@@ -54,12 +39,10 @@
   <div id="chapter_space"></div>
 </div>
 <div class="container-fluid mt3">
-  <div id="text_space">
-  </div>
+  <div id="text_space"></div>
 </div>
 
 <div id="testSpace"></div>
-
 
 <template id="testTemplate">
   <div class="chapter">1</div>
@@ -69,94 +52,139 @@
   </div>
 </template>
 
+<script type="text/javascript" src="{% static 'bible/js/script.js' %}"></script>
+
+<script>
+  // title 변경
+  let title = "성경";
+  setNavTitle(title);
+</script>
 <!-- onclick="displayText('{{obj.book}}'); displayChapter('{{obj.book}}', {{obj.chapter_length}})"> -->
-<script type="text/javascript">
+<!-- <script type="text/javascript">
+  // 요소 선택 변수 지정
+  let elText = document.getElementById("text_space");
+  let elChapter = document.getElementById("chapter_space");
 
-  // let metaData = {{ meta_data | safe }}
-  // let bibleData = {{ bible_data | safe }}
-  let elText = document.getElementById("text_space")
-  let elChapter = document.getElementById("chapter_space")
+  // title 변경
+  let title = "성경";
+  setNavTitle(title);
 
-  async function displayData(book, chapter = 0) { // 비동기 데이터 소환
+  // 비동기 데이터 보여주는 함수
+  async function displayData(book, chapter = 0) {
     // 데이터 추가할 DOM 요소 설정
-    const testSpace = document.querySelector('#testSpace');
+    const testSpace = document.querySelector("#testSpace");
     // 데이터 가져오기
-    let data = await getData(book, chapter)
-    testSpace.innerHTML = ""  // 초기화
+    let data = await getData(book, chapter);
+    testSpace.innerHTML = ""; // 초기화
     for (const obj of data) {
-      generateVerse(obj, testSpace) // 구절 데이터 생성
+      generateVerse(obj, testSpace); // 구절 데이터 생성
     }
   }
 
+  // Data 가져오는 fetch
   function getData(book, chapter = 0) {
-    let url = `/bible/bible/` + encodeURIComponent(book) + '/' + chapter;
+    let url = `/bible/bible/` + encodeURIComponent(book) + "/" + chapter;
     return fetch(url)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         return data;
       })
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error));
   }
 
-
-
-
-  function displayText(book, chapter = 0) {
-    elText.innerHTML = ""
-    const full_name = metaData.find(item => item.fields.book === book)?.fields.full_name;
-    elText.innerHTML = `
-    <div class="upside">${full_name} ${chapter == 0 ? "전체" : chapter}장</div><hr>`
-    // document.createElement('hr')
-    if (chapter) { // 장이 있는 경우 각 장
-      filtered = bibleData.filter(data => (data.fields.book === book) && (data.fields.chapter == chapter))
-
-      filtered.forEach((data, index) => {
-        if (index === 0) {
-          const div = document.createElement('div');
-          div.classList.add('chapter');
-          div.textContent = data.fields.chapter
-          elText.append(div)
-        }
-        generateVerse(data)
-      });
-    } else { // 장이 없는 경우 전체 장
-      filtered = bibleData.filter(data => (data.fields.book === book))
-
-      filtered.forEach((data) => {
-        if (data.fields.verse === 1) {
-          const div = document.createElement('div');
-          div.classList.add('chapter');
-          div.textContent = data.fields.chapter
-          elText.append(div)
-        }
-        generateVerse(data)
-      });
-
-
-      // for (const data of bibleData) {
-      //   if (data.fields.book === book) {
-      //     text = document.createTextNode(`${data.fields.contents}`)
-      //     paragrpah = document.createElement('p')
-      //     paragrpah.appendChild(text)
-      //     elText.appendChild(paragrpah)
-      //   }
-      // }
-    }
-  }
-
-
+  // 장을 표시하는 함수
   function displayChapter(book, chapter_length) {
-    elChapter.innerHTML = ""
+    elChapter.innerHTML = "";
     for (let index = 1; index < chapter_length + 1; index++) {
-      span = document.createElement('span')
-      span.classList.add("btn", "btn-outline-primary", "btn-sm")
-      span.append(`${index}`)
-      elChapter.appendChild(span)
-      span.addEventListener('click', () => {
-        displayData(book, index)
+      span = document.createElement("span");
+      span.classList.add("btn", "btn-outline-primary", "btn-sm");
+      span.append(`${index}`);
+      elChapter.appendChild(span);
+      span.addEventListener("click", () => {
+        displayData(book, index);
       });
     }
   }
+
+  function generateVerse(obj, space) {
+    // 1절인 경우 장 생성
+    if (obj.verse === 1) {
+      const div = document.createElement("div");
+      div.classList.add("chapter");
+      div.textContent = obj.chapter;
+      space.append(div);
+    }
+    // 박스 생성
+    const box = document.createElement("div");
+    box.classList.add("box");
+
+    // 절 번호 추가
+    const verseNumber = document.createElement("div");
+    verseNumber.classList.add("verse_number");
+    verseNumber.textContent = obj.verse;
+
+    // 절 내용 추가
+    const verse = document.createElement("p");
+    verse.textContent = obj.contents;
+
+    // 박스에 자식 요소들을 추가
+    box.appendChild(verseNumber);
+    box.appendChild(verse);
+
+    space.appendChild(box); // HTML 요소에 추가
+  }
+
+  function setNavTitle(title) {
+    document.getElementById("nav-title").innerText = title;
+  }
+</script> -->
+{% endblock contents %}
+
+<!-- 사용하지 않는 스크립트 -->
+<script>
+  // let metaData = {{ meta_data | safe }}
+  // let bibleData = {{ bible_data | safe }}
+
+  //   function displayText(book, chapter = 0) {
+  //   elText.innerHTML = "";
+  //   const full_name = metaData.find((item) => item.fields.book === book)?.fields
+  //     .full_name;
+  //   elText.innerHTML = `
+  //   <div class="upside">${full_name} ${
+  //     chapter == 0 ? "전체" : chapter
+  //   }장</div><hr>`;
+  //   // document.createElement('hr')
+  //   if (chapter) {
+  //     // 장이 있는 경우 각 장
+  //     filtered = bibleData.filter(
+  //       (data) => data.fields.book === book && data.fields.chapter == chapter
+  //     );
+
+  //     filtered.forEach((data, index) => {
+  //       if (index === 0) {
+  //         const div = document.createElement("div");
+  //         div.classList.add("chapter");
+  //         div.textContent = data.fields.chapter;
+  //         elText.append(div);
+  //       }
+  //       generateVerse(data);
+  //     });
+  //   } else {
+  //     // 장이 없는 경우 전체 장
+  //     filtered = bibleData.filter((data) => data.fields.book === book);
+
+  //     filtered.forEach((data) => {
+  //       if (data.fields.verse === 1) {
+  //         const div = document.createElement("div");
+  //         div.classList.add("chapter");
+  //         div.textContent = data.fields.chapter;
+  //         elText.append(div);
+  //       }
+  //       generateVerse(data);
+  //     });
+
+  //   }
+  // }
 
   // function generateVerse(data, index) {
   //   // 박스 생성
@@ -179,33 +207,13 @@
   //   elText.appendChild(box) // HTML 요소에 추가
   // }
 
-  function generateVerse(obj, space) {
-    // 1절인 경우 장 생성
-    if (obj.verse === 1) {
-      const div = document.createElement('div');
-      div.classList.add('chapter');
-      div.textContent = obj.chapter
-      space.append(div)
-    }
-    // 박스 생성
-    const box = document.createElement('div');
-    box.classList.add('box');
-
-    // 절 번호 추가
-    const verseNumber = document.createElement('div');
-    verseNumber.classList.add('verse_number');
-    verseNumber.textContent = obj.verse
-
-    // 절 내용 추가
-    const verse = document.createElement('p');
-    verse.textContent = obj.contents
-
-    // 박스에 자식 요소들을 추가
-    box.appendChild(verseNumber);
-    box.appendChild(verse);
-
-    space.appendChild(box) // HTML 요소에 추가
-  }
+  // for (const data of bibleData) {
+  //   if (data.fields.book === book) {
+  //     text = document.createTextNode(`${data.fields.contents}`)
+  //     paragrpah = document.createElement('p')
+  //     paragrpah.appendChild(text)
+  //     elText.appendChild(paragrpah)
+  //   }
+  // }
 </script>
-{% endblock contents %}
 <!-- Horizontal under breakpoint -->

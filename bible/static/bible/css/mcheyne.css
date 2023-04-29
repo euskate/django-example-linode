@@ -1,0 +1,21 @@
+#part-list > ol > li {
+  display: inline-flex;
+}
+
+#date {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #ededed;
+  margin: 0;
+  padding: 1em 0 0 0;
+}
+
+#part-list {
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  background-color: #ededed;
+  margin: 0;
+  padding: 1em;
+}

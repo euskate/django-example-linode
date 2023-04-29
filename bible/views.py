@@ -29,6 +29,8 @@ class McheyneView(TemplateView):
             month=today.month, day=today.day).get()
         item = vars(query)
         data = []
+        parts = []
+
         for i in range(1, 5):
             id_rng = []
             for j in ['start', 'end']:
@@ -38,10 +40,13 @@ class McheyneView(TemplateView):
                 id_rng.append(BibleModel.objects.filter(
                     book=book, chapter=chapter, verse=verse).get().id)
             data.append(BibleModel.objects.filter(id__range=id_rng))
+            parts.append(item.get(f'part{i}'))
 
         list_data = [item.values() for item in data]
+
         context = super().get_context_data(**kwargs)
         context["today_mcheyne"] = query
+        context["parts"] = parts
         context["today_data"] = list_data
         # context["mcheyne_data"] = serializers.serialize('json', McheyneModel.objects.all())
         # context["bible_data"] = serializers.serialize('json', BibleModel.objects.all())

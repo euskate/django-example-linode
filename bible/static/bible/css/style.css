@@ -35,3 +35,21 @@ p {
   text-align: center;
   font-size: large;
 }
+
+/* 밝은 모드 스타일 */
+body {
+  background-color: #ffffff;
+  color: #333333;
+  transition: background-color 0.3s ease;
+}
+
+/* 어두운 모드 스타일 */
+body.dark-mode {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+/* 다크 모드 아이콘 스타일 */
+#darkModeIcon {
+  cursor: pointer;
+}

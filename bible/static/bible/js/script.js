@@ -72,3 +72,23 @@ function setNavTitle(title) {
   document.getElementById("nav-title").innerText = title;
 }
 
+
+/* Dark Mode */
+const darkModeIcon = document.getElementById('darkModeIcon');
+
+// 페이지 로드 시 저장된 사용자 환경 설정을 확인하고 반영
+if (localStorage.getItem('darkMode') === 'enabled') {
+  document.body.classList.add('dark-mode');
+}
+
+// 아이콘 클릭 시 다크 모드 설정 변경
+darkModeIcon.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+
+  // 다크 모드 상태를 로컬 스토리지에 저장
+  if (document.body.classList.contains('dark-mode')) {
+    localStorage.setItem('darkMode', 'enabled');
+  } else {
+    localStorage.setItem('darkMode', 'disabled');
+  }
+});

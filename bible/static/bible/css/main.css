@@ -30,6 +30,10 @@ nav {
   top: 0;
 }
 
+nav .right-side {
+  display: flex;
+}
+
 /* 메뉴바 3단 줄 */
 #menu-bar {
   margin: 0 20px;
@@ -55,4 +59,3 @@ nav {
   right: 0px;
   line-height: 200%;
 }
-

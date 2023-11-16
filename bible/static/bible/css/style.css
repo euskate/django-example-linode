@@ -43,6 +43,11 @@ body {
   transition: background-color 0.3s ease;
 }
 
+a {
+  color: gray;
+  text-decoration: none;
+}
+
 /* 어두운 모드 스타일 */
 body.dark-mode {
   background-color: #333333;

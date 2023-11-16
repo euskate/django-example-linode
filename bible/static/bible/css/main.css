@@ -4,7 +4,7 @@ body {
 }
 
 a {
-  color: black;
+  /* color: black; */
   text-decoration: none;
 }
 
@@ -23,8 +23,8 @@ nav {
   padding: 0.5rem;
   justify-content: space-between;
   align-items: center;
-  color: #121212;
-  background-color: #ededed;
+  /* color: #121212;
+  background-color: #ededed; */
   position: fixed;
   font-weight: 16px;
   top: 0;
@@ -55,7 +55,7 @@ nav .right-side {
   position: fixed;
   padding: 1em;
   top: 40px;
-  background-color: #ededed;
+  /* background-color: #ededed; */
   right: 0px;
   line-height: 200%;
 }
